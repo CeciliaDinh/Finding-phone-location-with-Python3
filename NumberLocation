@@ -1,0 +1,30 @@
+import phonenumbers
+from mynumber import number
+from phonenumbers import geocoder
+import folium
+
+Key = str("33cfeeefb2b74729bd872bd6ca1d4073")
+# find phone location
+hang_number = phonenumbers.parse(number)
+my_location = geocoder.description_for_number(hang_number, "en")
+print(my_location)
+your_location = geocoder.description_for_number(hang_number, "en")
+# get service provider
+from phonenumbers import carrier
+
+service_provider = phonenumbers.parse(number)
+print(carrier.name_for_number(service_provider, "1234"))
+from opencage.geocoder import OpenCageGeocode
+
+geocoder = OpenCageGeocode(Key)
+query = str(your_location)
+results = geocoder.geocode(query)
+print(results)
+
+lat = results[0]['geometry']['lat']
+long = results[0]['geometry']['lng']
+print(lat, long)
+my_map = folium.Map(location=[lat, long])
+folium.Marker([lat, long], popup=your_location).add_to(my_map)
+# savemap in HTML
+my_map.save('my_location.html')
